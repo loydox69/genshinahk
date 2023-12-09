@@ -69,7 +69,7 @@ EnterPass() {
     SendInput "{Tab}"
     sleep 120
     SendInput "{Tab}"
-    pass := "wojiushiL3283@"
+    pass := ""
     SendInput pass
     sleep 90
     SendInput "{Enter}"
