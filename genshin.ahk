@@ -8,8 +8,10 @@ $^6::setCursor()
 $^7::moveCursor()
 $^8::clicking()
 $^9::changeStop()
+$^3::sendRightClick()
 $^0::ReloadScript()
 !w::keepW()
+!r::spin()
 ~f::sendF()
 
 ;$^3::showTesting()
@@ -19,6 +21,39 @@ global PosX:=1234
 global PosY:=658
 global testing := 5
 global isMsgBox:=0
+
+
+MOUSEEVENTF_MOVE := 0x0001
+spin() {
+    CheckAndRunMsgBox("ALT+R spin")
+    setStop(0)
+
+    ; 旋转时间
+    global speed := 50  ; 调整移动速度（正数表示更慢，负数表示更快）
+    global x := 200   ; 向右移动的像素数
+    global y := 0      ; 向下移动的像素数
+    global duration := 3800  ; 持续时间（毫秒）
+    global sleepTime  := 1 ; 睡觉时间
+    local startTime := A_TickCount  ; 记录开始时间
+
+    while (A_TickCount - startTime < duration) {
+        if (getStop() = 1) {
+            break
+        }
+
+        ; 使用 MouseEvent 函数模拟鼠标移动
+        ; MouseEvent("move", x, y, speed, 0)
+        mouse_event(MOUSEEVENTF_MOVE, x, y, speed, 0)
+
+
+        ; 控制每次移动的间隔时间
+        Sleep sleepTime
+    }
+}
+
+mouse_event(flags, x := 0, y := 0, data := 0, extra_info := 0) {
+    DllCall("mouse_event", "UInt", flags, "UInt", x, "UInt", y, "UInt", data, "UInt", extra_info)
+}
 
 sendF(){
     Loop{
@@ -33,8 +68,21 @@ sendF(){
     }
 }
 
-
-	
+sendRightClick() {
+    Loop {
+        Sleep 10 ; Adjust sleep time as needed
+        setStop(0)
+        Loop {
+            If (getStop() = 1){
+                break
+            }else{
+                Send "{RButton down}"
+                Sleep 120
+                Send "{RButton down}"
+            }
+        }
+    }
+}
 
 
 
